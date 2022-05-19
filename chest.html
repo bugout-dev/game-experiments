@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Making your first Phaser 3 Game - Part 1</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    var config = {
+        type: Phaser.AUTO,
+        width: 96,
+        height: 96,
+        physics: {
+            default: 'arcade',
+            arcade: {
+                debug: false
+            },
+        },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    var lootbox;
+
+    var game = new Phaser.Game(config);
+
+    function preload ()
+    {
+        this.load.spritesheet('lootbox', 'assets/chest.png', { frameWidth: 64, frameHeight: 64});
+    }
+
+    function create ()
+    {
+        lootbox = this.physics.add.sprite(48, 48, 'lootbox')
+        this.anims.create({
+            key: 'open',
+            frames: this.anims.generateFrameNumbers('lootbox', { start: 1, end: 4 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'close',
+            frames: this.anims.generateFrameNumbers('lootbox', { start: 4, end: 1 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'turn',
+            frames: [ { key: 'lootbox', frame: 0 } ],
+            frameRate: 20
+        });
+
+        cursors = this.input.keyboard.createCursorKeys();
+    }
+
+    function update ()
+    {
+        if (cursors.up.isDown)
+        {
+            lootbox.anims.play('open', true);
+        }
+        else if (cursors.down.isDown)
+        {
+            lootbox.anims.play('close', true);
+        } else {
+            lootbox.anims.play('turn', true)
+        }
+
+    }
+
+</script>
+
+</body>
+</html>
