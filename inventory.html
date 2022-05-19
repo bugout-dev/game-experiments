@@ -1,0 +1,122 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Making your first Phaser 3 Game - Part 1</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    var config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        backgroundColor: '#D2B48C',
+        physics: {
+        default: 'arcade',
+        arcade: {
+            debug: false
+        }
+    },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    const tileCoordinates = [
+        {
+            x: 100,
+            y: 100
+        },
+        {
+            x: 200,
+            y: 100
+        },
+        {
+            x: 300,
+            y: 100
+        },
+        
+        {
+            x: 100,
+            y: 200
+        },
+        {
+            x: 200,
+            y: 200
+        },
+        {
+            x: 300,
+            y: 200
+        }
+        
+    ]
+    
+    const FRAMES = {
+        inventoryTile: 7,
+        upButton: 135,
+        downButton: 134,
+        activeUpButton: 148,
+        activeDownButton: 147,
+    }
+
+    var game = new Phaser.Game(config);
+    var inventoryTiles = [];
+
+    var upButton;
+    var downButton;
+
+    function preload ()
+    {
+        
+        this.load.spritesheet('ui-assets', 'assets/ui-elements.png', { frameWidth: 64, frameHeight: 64, startFrame:0, endFrame: 153 });
+    
+    }
+
+    function create ()
+    {
+        this.anims.create({
+            key: 'inventoryTile',
+            frames: [ { key: 'ui-assets', frame: 0 } ],
+            frameRate: 20
+        });
+
+        upButton = this.add.sprite(400, 100, 'ui-assets', FRAMES.upButton).setInteractive();
+        upButton.on('pointerdown', () => {
+            upButton.setFrame(FRAMES.activeUpButton);
+        });
+        upButton.on('pointerup', () => {
+            upButton.setFrame(FRAMES.upButton);
+        });
+        
+        downButton = this.add.sprite(400, 200, 'ui-assets', FRAMES.downButton).setInteractive();
+        downButton.on('pointerdown', () => {
+            downButton.setFrame(FRAMES.activeDownButton);
+        });
+        downButton.on('pointerup', () => {
+            downButton.setFrame(FRAMES.downButton);
+        });
+        tileCoordinates.forEach(i => {
+            let tile =  this.add.sprite(i.x, i.y, 'ui-assets', FRAMES.inventoryTile).setInteractive();
+            inventoryTiles.push(tile);
+        })
+        
+    }
+
+    function update ()
+    {
+    }
+
+</script>
+
+</body>
+</html>

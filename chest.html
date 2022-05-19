@@ -32,7 +32,9 @@
     };
 
     var lootbox;
-
+    var lootboxState = {
+        opened: false,
+    };
     var game = new Phaser.Game(config);
 
     function preload ()
@@ -41,7 +43,7 @@
     }
 
     function create ()
-    {
+    {   
         lootbox = this.physics.add.sprite(48, 48, 'lootbox')
         this.anims.create({
             key: 'open',
@@ -51,15 +53,23 @@
         });
         this.anims.create({
             key: 'close',
-            frames: this.anims.generateFrameNumbers('lootbox', { start: 4, end: 1 }),
+            frames: this.anims.generateFrameNumbers('lootbox', { start: 3, end: 6 }),
             frameRate: 10,
             repeat: -1
         });
+
+
         this.anims.create({
-            key: 'turn',
+            key: 'closed',
             frames: [ { key: 'lootbox', frame: 0 } ],
             frameRate: 20
         });
+
+        this.anims.create({
+            key: 'opened',
+            frames: [ { key: 'lootbox', frame: 4 } ],
+            frameRate: 20
+        })
 
         cursors = this.input.keyboard.createCursorKeys();
     }
@@ -68,13 +78,23 @@
     {
         if (cursors.up.isDown)
         {
-            lootbox.anims.play('open', true);
+            if (!lootboxState.opened) {
+                lootbox.anims.play('open', true);
+                lootboxState.opened = true;
+            }
         }
         else if (cursors.down.isDown)
         {
-            lootbox.anims.play('close', true);
-        } else {
-            lootbox.anims.play('turn', true)
+            if (lootboxState.opened){
+                lootbox.anims.play('close', true);
+                lootboxState.opened = false;
+            }
+            
+        } else if (lootboxState.opened) {
+            lootbox.anims.play('opened', true)
+        }
+        else {
+            lootbox.anims.play('closed', true)
         }
 
     }
